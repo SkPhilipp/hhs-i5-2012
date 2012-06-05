@@ -9,9 +9,8 @@ import javax.ws.rs.core.Response;
 import paradise.model.Employee;
 
 /**
- * @author Philipp
+ * @author Groep3
  */
-
 @Stateless
 @Path("/employee") 
 @Consumes(MediaType.APPLICATION_JSON)

@@ -3,7 +3,7 @@ package paradise.model;
 import java.sql.Date;
 
 /**
- * @author Philipp
+ * @author Groep3
  */
 public class Employee {
 
