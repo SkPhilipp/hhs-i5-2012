@@ -3,8 +3,20 @@
     <head>
         <title>Index</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+        <script>
+            $.ajaxSetup({
+                url: '/HHS-I5/api/test',
+                type: 'GET',
+                contentType: 'application/json',
+                success: function(data){
+                    console.log(data);
+                },
+                error: function(data){
+                    console.log(data);
+                }
+            });
+        </script>
     </head>
-    <body>
-        <a href="/api/test">test</a>
-    </body>
+    <body></body>
 </html>

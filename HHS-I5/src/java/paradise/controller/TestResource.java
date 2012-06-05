@@ -1,7 +1,10 @@
 package paradise.controller;
 
+import java.io.Serializable;
 import javax.ejb.Stateless;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import paradise.model.TestObject;
 
 /**
  * Test REST resource.
@@ -11,18 +14,18 @@ import javax.ws.rs.*;
 
 @Stateless
 @Path("/test")
-public class TestResource {
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
+public class TestResource implements Serializable {
 
     @GET
-    @Produces("text/html")
-    public String get() {
-        return "Test";
+    public TestObject get() {
+        return new TestObject();
     }
 
     @PUT
-    @Consumes("text/plain")
-    public void put(String content) {
-        System.out.println(content);
+    public void put() {
+        System.out.println("Line");
     }
 
 }
