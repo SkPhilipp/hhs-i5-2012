@@ -18,17 +18,6 @@ public class Employee {
     public int branch;
     public String curriculumVitaeURL;
 
-    public Employee(int ID, String status, String sex, Date birthDate, String fax, String socialSecurityNumber, String email, int manager, int branch, String curriculumVitaeURL) {
-        this.ID = ID;
-        this.status = status;
-        this.sex = sex;
-        this.birthDate = birthDate;
-        this.fax = fax;
-        this.socialSecurityNumber = socialSecurityNumber;
-        this.email = email;
-        this.manager = manager;
-        this.branch = branch;
-        this.curriculumVitaeURL = curriculumVitaeURL;
-    }
+    //TODO: Employee
 
 }

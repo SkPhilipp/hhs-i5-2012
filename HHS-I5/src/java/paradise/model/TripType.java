@@ -6,6 +6,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ * @author Groep3
+ */
 @Entity
 @Table(name = "TripType")
 @XmlRootElement
@@ -18,17 +21,14 @@ public class TripType  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
     @NotNull
     @Column(name = "ID")
     private int ID;
     
-    @Basic(optional = false)
     @NotNull
     @Column(name = "maxAmountOfPeople")
     private int maxAmountOfPeople;
     
-    @Basic(optional = false)
     @NotNull
     @Column(name = "kidsAllowed")
     private int kidsAllowed;
@@ -39,6 +39,10 @@ public class TripType  implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tripType")
     private List<Excursion> excursionList;
 
-    //TODO: Products - many to many
+    @ManyToMany
+    @JoinTable(name="TripTypeProduct",
+      joinColumns={@JoinColumn(name="tripType", referencedColumnName="ID")},
+      inverseJoinColumns={@JoinColumn(name="product", referencedColumnName="ID")})
+    private List<Product> relatedProducts;
 
 }

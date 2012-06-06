@@ -1,5 +1,8 @@
 package paradise.webshop;
 
+/**
+ * @author Groep3
+ */
 public class WebshopSession {
 
     // Selected Trip
