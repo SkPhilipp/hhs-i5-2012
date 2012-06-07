@@ -12,18 +12,17 @@
 %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:include page="template-header.html"/>
-<%--
-    --- webshop/excursion.jsp ---
-    Actor kiest meerdere excuries uit lijst van excursies binnen geselecteerde trip
-    Actor geeft per excursie aan hoeveel personen er mee gaan en bevestigt
-        Als dit meer personen zijn dan is toegestaan komt er een foutmelding
---%>
 <div class="span8 offset2">
     <form action="confirm.jsp" method="POST">
-        <h1>Trip</h1>
+        <h1><%= trip.getTripType().getName() %></h1>
         <div class="control-group">
             <div class="controls">
-                Aantal Personen <input type="text" class="input-xlarge" name="people" value="0">
+                Aantal Volwassenen <input type="text" class="input-xlarge" name="amount-adults" value="0">
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                Aantal Kinderen <input <% if(trip.getTripType().getKidsAllowed()) { %> disabled <% } %>type="text" class="input-xlarge" name="amount-children" value="0">
                 <p class="help-block">
                     <em>( <%= formatter.format(trip.getPrice()) %> per persoon. Maximaal <%= trip.getRemainingCount() %> )</em>
                 </p>
