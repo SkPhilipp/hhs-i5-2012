@@ -92,4 +92,14 @@ public class Trip implements Serializable {
         this.bookingList = bookingList;
     }
 
+    public int getRemainingCount(){
+        int amount = this.getTripType().getMaxAmountOfPeople();
+        if(this.bookingList != null){
+            for(Booking booking : this.bookingList){
+                amount -= ( booking.getAmountOfAdults() + booking.getAmountOfKids() );
+            }
+        }
+        return amount;
+    }
+
 }
