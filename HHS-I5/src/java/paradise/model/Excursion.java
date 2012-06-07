@@ -116,4 +116,14 @@ public class Excursion  implements Serializable {
         this.bookingExcursionList = bookingExcursionList;
     }
 
+    public int getRemainingCount(){
+        int amount = this.getMaxAmountOfPeople();
+        if(this.bookingExcursionList != null){
+            for(BookingExcursion bookingexcursion : this.bookingExcursionList){
+                amount -= bookingexcursion.getAmountOfPeople();
+            }
+        }
+        return amount;
+    }
+
 }

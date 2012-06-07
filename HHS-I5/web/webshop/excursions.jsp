@@ -19,7 +19,7 @@
         Als dit meer personen zijn dan is toegestaan komt er een foutmelding
 --%>
 <div class="span8 offset2">
-    <form action="confirm.jsp">
+    <form action="confirm.jsp" method="POST">
         <h1>Trip</h1>
         <div class="control-group">
             <div class="controls">
@@ -45,7 +45,7 @@
             <div class="controls">
                 Aantal Personen <input type="text" class="input-xlarge" name="<%= e.getID() %>" value="0">
                 <p class="help-block">
-                    <em>( <%= formatter.format(e.getPrice()) %> per persoon. Maximaal <%= e.getMaxAmountOfPeople() %> personen. Gids: <%= e.getGuide() %> )</em>
+                    <em>( <%= formatter.format(e.getPrice()) %> per persoon. Nog ruimte beschikbaar voor <%= e.getRemainingCount() %> personen. Gids: <%= e.getGuide() %> )</em>
                 </p>
             </div>
         </div>
