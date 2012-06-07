@@ -26,14 +26,6 @@ public class TripType  implements Serializable {
         this.ID = ID;
     }
 
-    public List<Excursion> getExcursionList() {
-        return excursionList;
-    }
-
-    public void setExcursionList(List<Excursion> excursionList) {
-        this.excursionList = excursionList;
-    }
-
     public boolean getKidsAllowed() {
         return kidsAllowed;
     }
@@ -90,7 +82,6 @@ public class TripType  implements Serializable {
         this.maxAmountOfPeople = maxAmountOfPeople;
         this.kidsAllowed = kidsAllowed;
         this.tripList = new ArrayList<Trip>();
-        this.excursionList = new ArrayList<Excursion>();
         this.relatedProducts = new ArrayList<Product>();
         this.name = name;
         this.description = description;
@@ -122,9 +113,6 @@ public class TripType  implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tripType")
     private List<Trip> tripList;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tripType")
-    private List<Excursion> excursionList;
 
     @ManyToMany
     @JoinTable(name="TripTypeProduct",

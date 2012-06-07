@@ -1,6 +1,7 @@
 package paradise.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
@@ -21,11 +22,13 @@ public class Trip implements Serializable {
     public Trip() {
     }
 
-    public Trip(int ID, Date startDate, Date endDate, TripType tripType) {
+    public Trip(int ID, Date startDate, Date endDate, TripType tripType, double price) {
         this.ID = ID;
         this.startDate = startDate;
         this.endDate = endDate;
         this.tripType = tripType;
+        this.excursionList = new ArrayList<Excursion>();
+        this.price = price;
     }
 
     public int getID() {
@@ -78,6 +81,11 @@ public class Trip implements Serializable {
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date endDate;
 
+    @NotNull
+    @Column(name = "price")
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private double price;
+
     @ManyToOne
     private TripType tripType;
 
@@ -100,6 +108,25 @@ public class Trip implements Serializable {
             }
         }
         return amount;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tripType")
+    private List<Excursion> excursionList;
+
+    public List<Excursion> getExcursionList() {
+        return excursionList;
+    }
+
+    public void setExcursionList(List<Excursion> excursionList) {
+        this.excursionList = excursionList;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
 }

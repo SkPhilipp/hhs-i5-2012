@@ -49,23 +49,24 @@ public class Excursion  implements Serializable {
         this.price = price;
     }
 
-    public TripType getTripType() {
-        return tripType;
+    public Trip getTrip() {
+        return trip;
     }
 
-    public void setTripType(TripType tripType) {
-        this.tripType = tripType;
+    public void setTrip(Trip trip) {
+        this.trip = trip;
     }
 
     public Excursion() {
     }
 
-    public Excursion(int ID, int maxAmountOfPeople, String guide, double price, String name) {
+    public Excursion(int ID, int maxAmountOfPeople, String guide, double price, String name, Trip trip) {
         this.ID = ID;
         this.maxAmountOfPeople = maxAmountOfPeople;
         this.guide = guide;
         this.price = price;
         this.name = name;
+        this.trip = trip;
     }
 
     public String getName() {
@@ -102,7 +103,7 @@ public class Excursion  implements Serializable {
 
     @NotNull
     @ManyToOne
-    private TripType tripType;
+    private Trip trip;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "excursion")
     private List<BookingExcursion> bookingExcursionList;
