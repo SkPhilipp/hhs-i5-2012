@@ -1,14 +1,20 @@
+<%@page import="paradise.jpa.TripJpaController"%>
 <%@page import="paradise.model.Booking"%>
 <%@page import="java.text.NumberFormat"%>
 <%@page import="paradise.model.Excursion"%>
 <%@page import="paradise.model.Trip"%>
-<%@page import="paradise.controller.TripJPAController"%>
+<%@page import="javax.naming.InitialContext"%>
+<%@page import="javax.transaction.UserTransaction"%>
+<%@page import="javax.persistence.Persistence"%>
+<%@page import="javax.persistence.EntityManagerFactory"%>
 <%
     String param = request.getParameter("trip");
     try{
         int id = Integer.parseInt(param);
-        TripJPAController controller = new TripJPAController();
-        Trip trip = controller.findEntity(id);
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("HHS-I5PU");
+        UserTransaction ut = (UserTransaction)new InitialContext().lookup("java:comp/UserTransaction");
+        TripJpaController controller = new TripJpaController(ut, emf);
+        Trip trip = controller.findTrip(id);
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
 %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

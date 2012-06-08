@@ -4,6 +4,8 @@
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <jta-data-source>MySQL-OP</jta-data-source>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <shared-cache-mode>NONE</shared-cache-mode>
+    <validation-mode>NONE</validation-mode>
     <properties>
       <property name="javax.persistence.target-database" value="MySQL"/>
       <property name="javax.persistence.logging.level" value="INFO"/>
@@ -11,7 +13,6 @@
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/outdoorparadise"/>
       <property name="javax.persistence.jdbc.user" value="outdoorparadise"/>
       <property name="javax.persistence.jdbc.password" value=""/>
-      <property name="eclipselink.ddl-generation" value="create-tables"/>
     </properties>
   </persistence-unit>
 </persistence>

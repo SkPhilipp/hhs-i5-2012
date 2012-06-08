@@ -1,11 +1,15 @@
+<%@page import="paradise.jpa.ExcursionJpaController"%>
+<%@page import="paradise.jpa.TripJpaController"%>
 <%@page import="paradise.model.Booking"%>
 <%@page import="java.text.NumberFormat"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="paradise.model.Excursion"%>
-<%@page import="paradise.controller.ExcursionJPAController"%>
 <%@page import="paradise.model.Trip"%>
-<%@page import="paradise.controller.TripJPAController"%>
 <%@page import="java.util.Map.Entry"%>
+<%@page import="javax.naming.InitialContext"%>
+<%@page import="javax.transaction.UserTransaction"%>
+<%@page import="javax.persistence.Persistence"%>
+<%@page import="javax.persistence.EntityManagerFactory"%>
 <%
     try{
         double price = 0;
@@ -18,11 +22,13 @@
         if(cancellationInsurance){
             price += Booking.CANCELLATION_INSURANCE_PRICE;
         }
-        TripJPAController tripController = new TripJPAController();
-        ExcursionJPAController excursionController = new ExcursionJPAController();
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("HHS-I5PU");
+        UserTransaction ut = (UserTransaction)new InitialContext().lookup("java:comp/UserTransaction");
+        TripJpaController tripController = new TripJpaController(ut, emf);
+        ExcursionJpaController excursionController = new ExcursionJpaController(ut, emf);
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
 
-        Trip trip = tripController.findEntity(Integer.parseInt(paramTrip));
+        Trip trip = tripController.findTrip(Integer.parseInt(paramTrip));
         if(trip.getRemainingCount() < amountAdults + amountKids){
             // Not enough space in Trip
             session.setAttribute("alert", "U heeft een te hoog aantal personen ingevuld bij de reis; er is niet ruimte voor zoveel personen.");
@@ -42,7 +48,7 @@
             if(paramName.startsWith("excursion-")){
                 // For each excursion parameter
                 String stringExcursionId = paramName.substring("excursion-".length());
-                Excursion excursion = excursionController.findEntity(Integer.parseInt(stringExcursionId));
+                Excursion excursion = excursionController.findExcursion(Integer.parseInt(stringExcursionId));
                 int reservations = Integer.parseInt(request.getParameter(paramName));
                 if(excursion.getRemainingCount() < reservations){
                     // Not enough space in Excursion

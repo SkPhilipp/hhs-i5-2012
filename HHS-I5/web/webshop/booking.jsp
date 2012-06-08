@@ -1,13 +1,19 @@
+<%@page import="paradise.jpa.TripJpaController"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.text.DateFormat"%>
 <%@page import="paradise.model.Trip"%>
-<%@page import="paradise.controller.TripJPAController"%>
+<%@page import="javax.naming.InitialContext"%>
+<%@page import="javax.transaction.UserTransaction"%>
+<%@page import="javax.persistence.Persistence"%>
+<%@page import="javax.persistence.EntityManagerFactory"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:include page="template-header.jsp"/>
 <%
-    TripJPAController controller = new TripJPAController();
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("HHS-I5PU");
+    UserTransaction ut = (UserTransaction)new InitialContext().lookup("java:comp/UserTransaction");
+    TripJpaController controller = new TripJpaController(ut, emf);
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy");
-    for(Trip trip : controller.findEntities()){
+    for(Trip trip : controller.findTripEntities()){
 %>
     <div class="span4" style="margin:5px;">
         <div class="thumbnail">
