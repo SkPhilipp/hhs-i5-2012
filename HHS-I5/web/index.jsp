@@ -30,6 +30,5 @@
                 </div>
             </div>
         </div>
-    <script src="webshop/js/bootstrap.min.js"></script>
     </body>
 </html>

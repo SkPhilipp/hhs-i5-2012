@@ -50,6 +50,7 @@
         }
         /*
          * TODO:Systeem maakt boeking aan
+         * TODO:Systeem laat confirm pagina zien met overzicht en totaal prijs     
          */
 %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

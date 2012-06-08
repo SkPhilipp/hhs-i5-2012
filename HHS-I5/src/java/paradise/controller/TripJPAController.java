@@ -5,7 +5,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import paradise.model.Booking;
-import paradise.model.Excursion;
 import paradise.model.Trip;
 import paradise.model.TripType;
 
@@ -35,8 +34,6 @@ public class TripJPAController {
         // Add trips to object list
         add(tempTrip1);
         add(tempTrip2);
-        add(new Trip(2, start, end, type, 49.95));
-        add(new Trip(3, start, end, type, 1995.95));
     }};
 
     public List<Trip> findEntities() {
