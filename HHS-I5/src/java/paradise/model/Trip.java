@@ -1,42 +1,80 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package paradise.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
- * @author Groep3
+ *
+ * @author Philipp
  */
 @Entity
-@Table(name = "Trip")
+@Table(name = "trip")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Trip.findAll", query = "SELECT u FROM Trip u")
-    })
+    @NamedQuery(name = "Trip.findAll", query = "SELECT t FROM Trip t"),
+    @NamedQuery(name = "Trip.findById", query = "SELECT t FROM Trip t WHERE t.id = :id"),
+    @NamedQuery(name = "Trip.findByEndDate", query = "SELECT t FROM Trip t WHERE t.endDate = :endDate"),
+    @NamedQuery(name = "Trip.findByStartDate", query = "SELECT t FROM Trip t WHERE t.startDate = :startDate"),
+    @NamedQuery(name = "Trip.findByPrice", query = "SELECT t FROM Trip t WHERE t.price = :price")})
 public class Trip implements Serializable {
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "ID")
+    private Integer id;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "endDate")
+    @Temporal(TemporalType.DATE)
+    private Date endDate;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "startDate")
+    @Temporal(TemporalType.DATE)
+    private Date startDate;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "price")
+    private double price;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "trip", fetch = FetchType.LAZY)
+    private List<Booking> bookingList;
+    @JoinColumn(name = "tripType", referencedColumnName = "ID")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private TripType tripType;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "trip", fetch = FetchType.LAZY)
+    private List<Excursion> excursionList;
 
     public Trip() {
     }
 
-    public Trip(int ID, Date startDate, Date endDate, TripType tripType, double price) {
-        this.ID = ID;
-        this.startDate = startDate;
+    public Trip(Integer id) {
+        this.id = id;
+    }
+
+    public Trip(Integer id, Date endDate, Date startDate, double price) {
+        this.id = id;
         this.endDate = endDate;
-        this.tripType = tripType;
-        this.excursionList = new ArrayList<Excursion>();
+        this.startDate = startDate;
         this.price = price;
     }
 
-    public int getID() {
-        return ID;
+    public Integer getId() {
+        return id;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Date getEndDate() {
@@ -55,43 +93,15 @@ public class Trip implements Serializable {
         this.startDate = startDate;
     }
 
-    public TripType getTripType() {
-        return tripType;
+    public double getPrice() {
+        return price;
     }
 
-    public void setTripType(TripType tripType) {
-        this.tripType = tripType;
+    public void setPrice(double price) {
+        this.price = price;
     }
- 
-    private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
-    @Column(name = "ID")
-    private int ID;
-    
-    @NotNull
-    @Column(name = "startDate")
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date startDate;
-    
-    @NotNull
-    @Column(name = "endDate")
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date endDate;
-
-    @NotNull
-    @Column(name = "price")
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private double price;
-
-    @ManyToOne
-    private TripType tripType;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "trip")
-    private List<Booking> bookingList;
-
+    @XmlTransient
     public List<Booking> getBookingList() {
         return bookingList;
     }
@@ -100,19 +110,15 @@ public class Trip implements Serializable {
         this.bookingList = bookingList;
     }
 
-    public int getRemainingCount(){
-        int amount = this.getTripType().getMaxAmountOfPeople();
-        if(this.bookingList != null){
-            for(Booking booking : this.bookingList){
-                amount -= ( booking.getAmountOfAdults() + booking.getAmountOfKids() );
-            }
-        }
-        return amount;
+    public TripType getTripType() {
+        return tripType;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tripType")
-    private List<Excursion> excursionList;
+    public void setTripType(TripType tripType) {
+        this.tripType = tripType;
+    }
 
+    @XmlTransient
     public List<Excursion> getExcursionList() {
         return excursionList;
     }
@@ -121,12 +127,39 @@ public class Trip implements Serializable {
         this.excursionList = excursionList;
     }
 
-    public double getPrice() {
-        return price;
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Trip)) {
+            return false;
+        }
+        Trip other = (Trip) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "paradise.dbmodel.Trip[ id=" + id + " ]";
+    }
+    
+    public int getRemainingCount(){
+        int amount = this.getTripType().getMaxAmountOfPeople();
+        if(this.bookingList != null){
+            for(Booking booking : this.bookingList){
+                amount -= ( booking.getAmountOfAdults() + booking.getAmountOfKids() );
+            }
+        }
+        return amount;
     }
 
 }

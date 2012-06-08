@@ -13,10 +13,11 @@ import paradise.model.Employee;
 public class EmployeeJPAController {
 
     private static List<Employee> objects = new ArrayList<Employee>(){{
-        add(new Employee(0, "Status", "M", new Date(0), null, "123-4567-890", "bob@OP", 0, 1, "No CV"));
-        add(new Employee(1, "Status", "M", new Date(0), null, "234-5678-901", "bobber@OP", 0, 1, "No CV"));
-        add(new Employee(2, "Status", "M", new Date(0), null, "345-6789-012", "bobby@OP", 0, 1, "No CV"));
-        add(new Employee(3, "Status", "M", new Date(0), null, "456-7890-123", "bobbytables@OP", 0, 1, "No CV"));
+        add(new Employee(1, "1234", "1@o.p"));
+        add(new Employee(2, "2334", "2@o.p"));
+        add(new Employee(3, "3434", "3@o.p"));
+        add(new Employee(4, "4534", "4@o.p"));
+        add(new Employee(5, "5634", "5@o.p"));
     }};
 
     public List<Employee> findEntities() {
@@ -25,7 +26,7 @@ public class EmployeeJPAController {
 
     public Employee findEntity(int id) {
         for(Employee e : objects){
-            if(e.getID() == id){
+            if(e.getId() == id){
                 return e;
             }
         }

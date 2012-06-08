@@ -1,72 +1,85 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package paradise.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
- * @author Groep3
+ *
+ * @author Philipp
  */
 @Entity
-@Table(name = "TripType")
+@Table(name = "triptype")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "TripType.findAll", query = "SELECT u FROM TripType u")
-    })
-public class TripType  implements Serializable {
-
-    public int getID() {
-        return ID;
-    }
-
-    public void setID(int ID) {
-        this.ID = ID;
-    }
-
-    public boolean getKidsAllowed() {
-        return kidsAllowed;
-    }
-
-    public void setKidsAllowed(boolean kidsAllowed) {
-        this.kidsAllowed = kidsAllowed;
-    }
-
-    public int getMaxAmountOfPeople() {
-        return maxAmountOfPeople;
-    }
-
-    public void setMaxAmountOfPeople(int maxAmountOfPeople) {
-        this.maxAmountOfPeople = maxAmountOfPeople;
-    }
-
-    public List<Product> getRelatedProducts() {
-        return relatedProducts;
-    }
-
-    public void setRelatedProducts(List<Product> relatedProducts) {
-        this.relatedProducts = relatedProducts;
-    }
-
-    public List<Trip> getTripList() {
-        return tripList;
-    }
-
-    public void setTripList(List<Trip> tripList) {
-        this.tripList = tripList;
-    }
+    @NamedQuery(name = "TripType.findAll", query = "SELECT t FROM TripType t"),
+    @NamedQuery(name = "TripType.findById", query = "SELECT t FROM TripType t WHERE t.id = :id"),
+    @NamedQuery(name = "TripType.findByMaxAmountOfPeople", query = "SELECT t FROM TripType t WHERE t.maxAmountOfPeople = :maxAmountOfPeople"),
+    @NamedQuery(name = "TripType.findByKidsAllowed", query = "SELECT t FROM TripType t WHERE t.kidsAllowed = :kidsAllowed")})
+public class TripType implements Serializable {
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "ID")
+    private Integer id;
+    @Basic(optional = false)
+    @NotNull
+    @Lob
+    @Size(min = 1, max = 65535)
+    @Column(name = "name")
+    private String name;
+    @Basic(optional = false)
+    @NotNull
+    @Lob
+    @Size(min = 1, max = 65535)
+    @Column(name = "description")
+    private String description;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "maxAmountOfPeople")
+    private int maxAmountOfPeople;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "kidsAllowed")
+    private boolean kidsAllowed;
+    @ManyToMany(mappedBy = "tripTypeList", fetch = FetchType.LAZY)
+    private List<Product> productList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tripType", fetch = FetchType.LAZY)
+    private List<ExcursionType> excursionTypeList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tripType", fetch = FetchType.LAZY)
+    private List<Trip> tripList;
 
     public TripType() {
     }
 
-    public String getDescription() {
-        return description;
+    public TripType(Integer id) {
+        this.id = id;
     }
 
-    public void setDescription(String description) {
+    public TripType(Integer id, String name, String description, int maxAmountOfPeople, boolean kidsAllowed) {
+        this.id = id;
+        this.name = name;
         this.description = description;
+        this.maxAmountOfPeople = maxAmountOfPeople;
+        this.kidsAllowed = kidsAllowed;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -77,47 +90,80 @@ public class TripType  implements Serializable {
         this.name = name;
     }
 
-    public TripType(int ID, int maxAmountOfPeople, boolean kidsAllowed, String name, String description) {
-        this.ID = ID;
-        this.maxAmountOfPeople = maxAmountOfPeople;
-        this.kidsAllowed = kidsAllowed;
-        this.tripList = new ArrayList<Trip>();
-        this.relatedProducts = new ArrayList<Product>();
-        this.name = name;
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    private static final long serialVersionUID = 1L;
+    public int getMaxAmountOfPeople() {
+        return maxAmountOfPeople;
+    }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
-    @Column(name = "ID")
-    private int ID;
-    
-    @NotNull
-    @Column(name = "maxAmountOfPeople")
-    private int maxAmountOfPeople;
-    
-    @NotNull
-    @Column(name = "kidsAllowed")
-    private boolean kidsAllowed;
-    
-    @NotNull
-    @Column(name = "name")
-    private String name;
-    
-    @NotNull
-    @Column(name = "description")
-    private String description;
+    public void setMaxAmountOfPeople(int maxAmountOfPeople) {
+        this.maxAmountOfPeople = maxAmountOfPeople;
+    }
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tripType")
-    private List<Trip> tripList;
+    public boolean getKidsAllowed() {
+        return kidsAllowed;
+    }
 
-    @ManyToMany
-    @JoinTable(name="TripTypeProduct",
-      joinColumns={@JoinColumn(name="tripType", referencedColumnName="ID")},
-      inverseJoinColumns={@JoinColumn(name="product", referencedColumnName="ID")})
-    private List<Product> relatedProducts;
+    public void setKidsAllowed(boolean kidsAllowed) {
+        this.kidsAllowed = kidsAllowed;
+    }
 
+    @XmlTransient
+    public List<Product> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(List<Product> productList) {
+        this.productList = productList;
+    }
+
+    @XmlTransient
+    public List<ExcursionType> getExcursionTypeList() {
+        return excursionTypeList;
+    }
+
+    public void setExcursionTypeList(List<ExcursionType> excursionTypeList) {
+        this.excursionTypeList = excursionTypeList;
+    }
+
+    @XmlTransient
+    public List<Trip> getTripList() {
+        return tripList;
+    }
+
+    public void setTripList(List<Trip> tripList) {
+        this.tripList = tripList;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof TripType)) {
+            return false;
+        }
+        TripType other = (TripType) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "paradise.dbmodel.TripType[ id=" + id + " ]";
+    }
+    
 }

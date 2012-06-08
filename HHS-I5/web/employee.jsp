@@ -36,7 +36,7 @@
                             for(Employee e : employeeController.findEntities()){
                         %>
                         <tr>
-                            <td><%= e.getID() %></td>
+                            <td><%= e.getId() %></td>
                             <td><%= e.getSocialSecurityNumber() %></td>
                             <td><%= e.getEmail() %></td>
                         </tr>

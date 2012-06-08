@@ -1,100 +1,67 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package paradise.model;
 
-import java.sql.Date;
+import java.io.Serializable;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * @author Groep3
+ *
+ * @author Philipp
  */
-public class Employee {
-
-    private int ID;
-    private String status;
-    private String sex;
-    private Date birthDate;
-    private String fax;
+@Entity
+@Table(name = "employee")
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "Employee.findAll", query = "SELECT e FROM Employee e"),
+    @NamedQuery(name = "Employee.findById", query = "SELECT e FROM Employee e WHERE e.id = :id")})
+public class Employee implements Serializable {
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "ID")
+    private Integer id;
+    @Basic(optional = false)
+    @NotNull
+    @Lob
+    @Size(min = 1, max = 65535)
+    @Column(name = "socialSecurityNumber")
     private String socialSecurityNumber;
+    @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")
+    @Basic(optional = false)
+    @NotNull
+    @Lob
+    @Size(min = 1, max = 65535)
+    @Column(name = "email")
     private String email;
-    private int manager;
-    private int branch;
-    private String curriculumVitaeURL;
 
-    //TODO: Employee
+    public Employee() {
+    }
 
-    public Employee(int ID, String status, String sex, Date birthDate, String fax, String socialSecurityNumber, String email, int manager, int branch, String curriculumVitaeURL) {
-        this.ID = ID;
-        this.status = status;
-        this.sex = sex;
-        this.birthDate = birthDate;
-        this.fax = fax;
+    public Employee(Integer id) {
+        this.id = id;
+    }
+
+    public Employee(Integer id, String socialSecurityNumber, String email) {
+        this.id = id;
         this.socialSecurityNumber = socialSecurityNumber;
         this.email = email;
-        this.manager = manager;
-        this.branch = branch;
-        this.curriculumVitaeURL = curriculumVitaeURL;
     }
 
-    public int getID() {
-        return ID;
+    public Integer getId() {
+        return id;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
-    }
-
-    public Date getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public int getBranch() {
-        return branch;
-    }
-
-    public void setBranch(int branch) {
-        this.branch = branch;
-    }
-
-    public String getCurriculumVitaeURL() {
-        return curriculumVitaeURL;
-    }
-
-    public void setCurriculumVitaeURL(String curriculumVitaeURL) {
-        this.curriculumVitaeURL = curriculumVitaeURL;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getFax() {
-        return fax;
-    }
-
-    public void setFax(String fax) {
-        this.fax = fax;
-    }
-
-    public int getManager() {
-        return manager;
-    }
-
-    public void setManager(int manager) {
-        this.manager = manager;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getSocialSecurityNumber() {
@@ -105,12 +72,37 @@ public class Employee {
         this.socialSecurityNumber = socialSecurityNumber;
     }
 
-    public String getStatus() {
-        return status;
+    public String getEmail() {
+        return email;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Employee)) {
+            return false;
+        }
+        Employee other = (Employee) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "paradise.dbmodel.Employee[ id=" + id + " ]";
+    }
+    
 }

@@ -12,7 +12,7 @@
     <div class="span4" style="margin:5px;">
         <div class="thumbnail">
             <div class="caption">
-                <h5><%= trip.getID() %> : <%= trip.getTripType().getName() %></h5>
+                <h5><%= trip.getId() %> : <%= trip.getTripType().getName() %></h5>
                 <p><%= trip.getTripType().getDescription() %></p>
                 <% if(trip.getTripType().getKidsAllowed()) { %>
                 <p><em>Kinderen niet toegestaan bij deze reis.</em></p>
@@ -20,7 +20,7 @@
                 <p><em>Nog <%= trip.getRemainingCount() %> plekken vrij.</em></p>
                 <p><em><%= formatter.format(trip.getStartDate()) %> tot en met <%= formatter.format(trip.getEndDate()) %></em></p>
                 <% if(trip.getRemainingCount() > 0){ %>
-                <p><a href="excursions.jsp?trip=<%= trip.getID() %>" class="btn btn-primary">Boeken</a>
+                <p><a href="excursions.jsp?trip=<%= trip.getId() %>" class="btn btn-primary">Boeken</a>
                 <% }else{ %>
                 <p><a href="#" class="btn btn-primary disabled">Uitverkocht</a>
                 <% } %>

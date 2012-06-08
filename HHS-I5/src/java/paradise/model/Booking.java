@@ -1,3 +1,7 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package paradise.model;
 
 import java.io.Serializable;
@@ -5,66 +9,98 @@ import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
- * @author Groep3
+ *
+ * @author Philipp
  */
 @Entity
-@Table(name = "Booking")
+@Table(name = "booking")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Booking.findAll", query = "SELECT u FROM Booking u")
-    })
+    @NamedQuery(name = "Booking.findAll", query = "SELECT b FROM Booking b"),
+    @NamedQuery(name = "Booking.findById", query = "SELECT b FROM Booking b WHERE b.id = :id"),
+    @NamedQuery(name = "Booking.findByAmountOfAdults", query = "SELECT b FROM Booking b WHERE b.amountOfAdults = :amountOfAdults"),
+    @NamedQuery(name = "Booking.findByAmountOfKids", query = "SELECT b FROM Booking b WHERE b.amountOfKids = :amountOfKids"),
+    @NamedQuery(name = "Booking.findByHasCancellationInsurance", query = "SELECT b FROM Booking b WHERE b.hasCancellationInsurance = :hasCancellationInsurance"),
+    @NamedQuery(name = "Booking.findBySalePrice", query = "SELECT b FROM Booking b WHERE b.salePrice = :salePrice")})
 public class Booking implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     public static final double CANCELLATION_INSURANCE_PRICE = 30.00;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "ID")
+    private Integer id;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "amountOfAdults")
+    private short amountOfAdults;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "amountOfKids")
+    private short amountOfKids;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "hasCancellationInsurance")
+    private boolean hasCancellationInsurance;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "salePrice")
+    private long salePrice;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "booking1", fetch = FetchType.LAZY)
+    private List<BookingExcursion> bookingExcursionList;
+    @JoinColumn(name = "trip", referencedColumnName = "ID")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Trip trip;
+    @JoinColumn(name = "private", referencedColumnName = "customer")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Private private1;
 
     public Booking() {
     }
 
-    public Booking(int ID, int amountOfKids, int amountOfAdults, boolean hasCancellationInsurance, int salePrice, Private customer, Trip trip) {
-        this.ID = ID;
-        this.amountOfKids = amountOfKids;
+    public Booking(Integer id) {
+        this.id = id;
+    }
+
+    public Booking(Integer id, short amountOfAdults, short amountOfKids, boolean hasCancellationInsurance, long salePrice) {
+        this.id = id;
         this.amountOfAdults = amountOfAdults;
+        this.amountOfKids = amountOfKids;
         this.hasCancellationInsurance = hasCancellationInsurance;
         this.salePrice = salePrice;
-        this.customer = customer;
-        this.trip = trip;
     }
 
-    public int getID() {
-        return ID;
+    public Integer getId() {
+        return id;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public int getAmountOfAdults() {
+    public short getAmountOfAdults() {
         return amountOfAdults;
     }
 
-    public void setAmountOfAdults(int amountOfAdults) {
+    public void setAmountOfAdults(short amountOfAdults) {
         this.amountOfAdults = amountOfAdults;
     }
 
-    public int getAmountOfKids() {
+    public short getAmountOfKids() {
         return amountOfKids;
     }
 
-    public void setAmountOfKids(int amountOfKids) {
+    public void setAmountOfKids(short amountOfKids) {
         this.amountOfKids = amountOfKids;
     }
 
-    public Private getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Private customer) {
-        this.customer = customer;
-    }
-
-    public boolean isHasCancellationInsurance() {
+    public boolean getHasCancellationInsurance() {
         return hasCancellationInsurance;
     }
 
@@ -72,12 +108,21 @@ public class Booking implements Serializable {
         this.hasCancellationInsurance = hasCancellationInsurance;
     }
 
-    public int getSalePrice() {
+    public long getSalePrice() {
         return salePrice;
     }
 
-    public void setSalePrice(int salePrice) {
+    public void setSalePrice(long salePrice) {
         this.salePrice = salePrice;
+    }
+
+    @XmlTransient
+    public List<BookingExcursion> getBookingExcursionList() {
+        return bookingExcursionList;
+    }
+
+    public void setBookingExcursionList(List<BookingExcursion> bookingExcursionList) {
+        this.bookingExcursionList = bookingExcursionList;
     }
 
     public Trip getTrip() {
@@ -88,47 +133,37 @@ public class Booking implements Serializable {
         this.trip = trip;
     }
 
-    private static final long serialVersionUID = 1L;
+    public Private getPrivate1() {
+        return private1;
+    }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
-    @Column(name = "ID")
-    private int ID;
+    public void setPrivate1(Private private1) {
+        this.private1 = private1;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Booking)) {
+            return false;
+        }
+        Booking other = (Booking) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "paradise.dbmodel.Booking[ id=" + id + " ]";
+    }
     
-    @NotNull
-    @Column(name = "amountOfKids")
-    private int amountOfKids;
-
-    @NotNull
-    @Column(name = "amountOfAdults")
-    private int amountOfAdults;
-
-    @NotNull
-    @Column(name = "hasCancellationInsurance")
-    private boolean hasCancellationInsurance;
-
-    @NotNull
-    @Column(name = "salePrice")
-    private int salePrice;
-
-    @NotNull
-    @ManyToOne
-    private Private customer;
-
-    @NotNull
-    @ManyToOne
-    private Trip trip;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "booking")
-    private List<BookingExcursion> bookingExcursionList;
-
-    public List<BookingExcursion> getBookingExcursionList() {
-        return bookingExcursionList;
-    }
-
-    public void setBookingExcursionList(List<BookingExcursion> bookingExcursionList) {
-        this.bookingExcursionList = bookingExcursionList;
-    }
-
 }

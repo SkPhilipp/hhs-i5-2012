@@ -46,13 +46,13 @@
                 int reservations = Integer.parseInt(request.getParameter(paramName));
                 if(excursion.getRemainingCount() < reservations){
                     // Not enough space in Excursion
-                    session.setAttribute("alert", "U heeft een te hoog aantal personen ingevuld bij de excursie \""+excursion.getName()+"\"");
+                    session.setAttribute("alert", "U heeft een te hoog aantal personen ingevuld bij de excursie \""+excursion.getExcursionType().getName()+"\"");
                     response.sendRedirect("excursions.jsp?trip="+paramTrip);
                     return;
                 }
                 if(reservations > amountAdults + amountKids){
                     // More excursion reservations than trip reservations
-                    session.setAttribute("alert", "U heeft bij de excursie \""+excursion.getName()+"\" voor meer personen gereserveerd dan het aantal mensen die met de reis mee gaan.");
+                    session.setAttribute("alert", "U heeft bij de excursie \""+excursion.getExcursionType().getName()+"\" voor meer personen gereserveerd dan het aantal mensen die met de reis mee gaan.");
                     response.sendRedirect("excursions.jsp?trip="+paramTrip);
                     return;
                 }
@@ -72,7 +72,7 @@
         <form action="confirm.jsp" method="POST">
             <input type="hidden" name="confirm" value="1"/>
             <h1><%= trip.getTripType().getName() %></h1>
-            <input type="hidden" name="trip" value="<%= trip.getID() %>"/>
+            <input type="hidden" name="trip" value="<%= trip.getId() %>"/>
             <p>Aantal volwassenen: <%= amountAdults %></p>
             <p>Aantal kinderen: <%= amountKids %></p>
             <input type="hidden" name="amount-adults" value="<%= amountAdults %>"/>
@@ -87,8 +87,8 @@
                 }
                 for(Excursion e : excursionMap.keySet()){
             %>
-            <p><%= excursionMap.get(e) %>x <%= e.getName() %></p>
-            <input type="hidden" name="excursion-<%= e.getID() %>" value="<%= excursionMap.get(e) %>"/>
+            <p><%= excursionMap.get(e) %>x <%= e.getExcursionType().getName() %></p>
+            <input type="hidden" name="excursion-<%= e.getId() %>" value="<%= excursionMap.get(e) %>"/>
             <%
                 }
             %>

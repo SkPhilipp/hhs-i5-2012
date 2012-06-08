@@ -3,6 +3,7 @@ package paradise.controller;
 import java.util.ArrayList;
 import java.util.List;
 import paradise.model.Excursion;
+import paradise.model.ExcursionType;
 
 /**
  * @author Groep3
@@ -12,8 +13,13 @@ import paradise.model.Excursion;
 public class ExcursionJPAController {
 
     private static List<Excursion> objects = new ArrayList<Excursion>(){{
-        add(new Excursion(5, 20, "Harry", 10.50, "Vissen", null));
-        add(new Excursion(16, 5, "Henk", 20, "Bootje varen", null));
+        ExcursionType type = new ExcursionType(1, "Vissen", "Vissen in de Nijl.");
+        Excursion excursion1 = new Excursion(1, 30, "Harry", 10.50);
+        excursion1.setExcursionType(type);
+        add(excursion1);
+        Excursion excursion2 = new Excursion(1, 30, "Joe", 10.50);
+        excursion1.setExcursionType(type);
+        add(excursion1);
     }};
 
     public List<Excursion> findEntities() {
@@ -22,7 +28,7 @@ public class ExcursionJPAController {
 
     public Excursion findEntity(int id) {
         for(Excursion e : objects){
-            if(e.getID() == id){
+            if(e.getId() == id){
                 return e;
             }
         }

@@ -25,7 +25,7 @@
         <div class="control-group">
             <div class="controls">
                 <label>Aantal Kinderen</label>
-                <input <% if(trip.getTripType().getKidsAllowed()) { %> disabled <% } %>type="text" class="input-xlarge" name="amount-children" value="0">
+                <input <% if(trip.getTripType().getKidsAllowed() == false) { %> disabled <% } %>type="text" class="input-xlarge" name="amount-children" value="0">
                 <p class="help-block">
                     <em>( <%= formatter.format(trip.getPrice()) %> per persoon. Maximaal <%= trip.getRemainingCount() %> )</em>
                 </p>
@@ -51,10 +51,10 @@
         for(Excursion e : trip.getExcursionList()){
 %>
         <div class="control-group">
-            <label class="control-label"><h4><%= e.getName() %></h4></label>
+            <label class="control-label"><h4><%= e.getExcursionType().getName() %></h4></label>
             <div class="controls">
                 <label>Aantal Personen</label>
-                <input type="text" class="input-xlarge" name="excursion-<%= e.getID() %>" value="0">
+                <input type="text" class="input-xlarge" name="excursion-<%= e.getId() %>" value="0">
                 <p class="help-block">
                     <em>( <%= formatter.format(e.getPrice()) %> per persoon. Nog ruimte beschikbaar voor <%= e.getRemainingCount() %> personen. Gids: <%= e.getGuide() %> )</em>
                 </p>

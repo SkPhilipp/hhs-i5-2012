@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import paradise.model.Booking;
 import paradise.model.Trip;
 import paradise.model.TripType;
 
@@ -16,24 +15,20 @@ import paradise.model.TripType;
 public class TripJPAController {
 
     private static List<Trip> objects = new ArrayList<Trip>(){{
-        TripType type = new TripType(0, 100, true, "Egypte", "Bergbeklimmen in Egypte.");
+    
+        TripType type = new TripType(1, "Egypte", "Bergbeklimmen in Egypte.", 120, true);
+
         ExcursionJPAController excursionController = new ExcursionJPAController();
-        Date start = new Date();
-        Date end = Calendar.getInstance().getTime();
 
-        final Trip tempTrip1 = new Trip(0, start, end, type, 12.50);
-        tempTrip1.setBookingList(new ArrayList<Booking>(){{
-            add(new Booking(0, 10, 20, true, 100, null, tempTrip1));
-            add(new Booking(0, 10, 60, true, 100, null, tempTrip1));
-        }});
+        Trip trip1 = new Trip(1, new Date(0), Calendar.getInstance().getTime(), 60.50);
+        trip1.setTripType(type);
+        Trip trip2 = new Trip(2, new Date(0), Calendar.getInstance().getTime(), 60.50);
+        trip2.setTripType(type);
+        add(trip1);
+        add(trip2);
 
-        final Trip tempTrip2 = new Trip(1, start, end, type, 15.50);
-        tempTrip2.setExcursionList(excursionController.findEntities());
+        //TODO: Set excursion list
 
-
-        // Add trips to object list
-        add(tempTrip1);
-        add(tempTrip2);
     }};
 
     public List<Trip> findEntities() {
