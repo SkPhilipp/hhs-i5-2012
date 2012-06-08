@@ -1,3 +1,6 @@
+<%--
+    @author Groep3 2012 : Anthony Elbers, Philipp Gayret, Bas Mans, Stefan Schouten
+--%>
 <%@page import="java.util.List"%>
 <%@page import="paradise.model.Employee"%>
 <%@page import="javax.naming.InitialContext"%>

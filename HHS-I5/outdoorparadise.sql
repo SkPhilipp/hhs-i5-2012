@@ -1,3 +1,4 @@
+/* @author Groep3 2012 : Anthony Elbers, Philipp Gayret, Bas Mans, Stefan Schouten */;
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 

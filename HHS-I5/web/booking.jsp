@@ -1,3 +1,6 @@
+<%--
+    @author Groep3 2012 : Anthony Elbers, Philipp Gayret, Bas Mans, Stefan Schouten
+--%>
 <%@page import="paradise.jpa.TripJpaController"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.text.DateFormat"%>
