@@ -1,5 +1,12 @@
+<%@page import="java.util.List"%>
 <%@page import="paradise.model.Employee"%>
-<%@page import="paradise.controller.EmployeeJPAController"%>
+<%@page import="javax.naming.InitialContext"%>
+<%@page import="javax.transaction.UserTransaction"%>
+<%@page import="javax.annotation.Resource"%>
+<%@page import="paradise.jpa.EmployeeJpaController"%>
+<%@page import="javax.persistence.EntityManager"%>
+<%@page import="javax.persistence.EntityManagerFactory"%>
+<%@page import="javax.persistence.Persistence"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!doctype html>
 <html>
@@ -32,16 +39,22 @@
                         </thead>
                         <tbody>
                         <%
-                            EmployeeJPAController employeeController = new EmployeeJPAController();
-                            for(Employee e : employeeController.findEntities()){
+                            EntityManagerFactory emf = Persistence.createEntityManagerFactory("HHS-I5PU");
+                            UserTransaction transaction = (UserTransaction)new InitialContext().lookup("java:comp/UserTransaction");
+
+                            EmployeeJpaController ejc = new EmployeeJpaController(transaction, emf);
+                            transaction.begin();
+                            List<Employee> employees = ejc.findEmployeeEntities();
+                            for(Employee e : employees){
                         %>
-                        <tr>
-                            <td><%= e.getId() %></td>
-                            <td><%= e.getSocialSecurityNumber() %></td>
-                            <td><%= e.getEmail() %></td>
-                        </tr>
+                            <tr>
+                                <td><%= e.getId() %></td>
+                                <td><%= e.getSocialSecurityNumber() %></td>
+                                <td><%= e.getEmail() %></td>
+                            </tr>
                         <%
                             }
+                            transaction.commit();
                         %>
                         </tbody>
                     </table>
