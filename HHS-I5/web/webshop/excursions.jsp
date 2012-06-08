@@ -1,3 +1,4 @@
+<%@page import="paradise.model.Booking"%>
 <%@page import="java.text.NumberFormat"%>
 <%@page import="paradise.model.Excursion"%>
 <%@page import="paradise.model.Trip"%>
@@ -28,6 +29,14 @@
                 <p class="help-block">
                     <em>( <%= formatter.format(trip.getPrice()) %> per persoon. Maximaal <%= trip.getRemainingCount() %> )</em>
                 </p>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <label class="checkbox">
+                    <input type="checkbox" name="cancellation-insurance">
+                    Annuleringsverzekering: <%= formatter.format(Booking.CANCELLATION_INSURANCE_PRICE) %> —
+                </label>
             </div>
         </div>
         <h2>Excursies</h2>

@@ -17,6 +17,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     })
 public class Booking implements Serializable {
 
+    public static final double CANCELLATION_INSURANCE_PRICE = 30.00;
+
     public Booking() {
     }
 

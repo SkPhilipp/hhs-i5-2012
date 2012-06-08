@@ -1,3 +1,6 @@
+<%@page import="paradise.model.Booking"%>
+<%@page import="java.text.NumberFormat"%>
+<%@page import="java.util.HashMap"%>
 <%@page import="paradise.model.Excursion"%>
 <%@page import="paradise.controller.ExcursionJPAController"%>
 <%@page import="paradise.model.Trip"%>
@@ -5,14 +8,19 @@
 <%@page import="java.util.Map.Entry"%>
 <%
     try{
+        double price = 0;
         String paramAmountKids = request.getParameter("amount-children");
         int amountKids = paramAmountKids == null ? 0 : Integer.parseInt(paramAmountKids);
         String paramAmountAdults = request.getParameter("amount-adults");
         int amountAdults = Integer.parseInt(paramAmountAdults);
         String paramTrip = request.getParameter("trip");
-
+        boolean cancellationInsurance = "on".equals(request.getParameter("cancellation-insurance"));
+        if(cancellationInsurance){
+            price += Booking.CANCELLATION_INSURANCE_PRICE;
+        }
         TripJPAController tripController = new TripJPAController();
         ExcursionJPAController excursionController = new ExcursionJPAController();
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
 
         Trip trip = tripController.findEntity(Integer.parseInt(paramTrip));
         if(trip.getRemainingCount() < amountAdults + amountKids){
@@ -21,13 +29,15 @@
             response.sendRedirect("excursions.jsp?trip="+paramTrip);
             return;
         }
+        price += trip.getPrice() * ( amountAdults + amountKids );
 
-        if(amountAdults + amountKids == 0){
-            session.setAttribute("alert", "U kunt niet met 0 personen op reis..");
+        if(amountAdults + amountKids <= 0 || amountAdults < 0 || amountKids < 0){
+            session.setAttribute("alert", "Er moet minimaal 1 persoon op reis..");
             response.sendRedirect("excursions.jsp?trip="+paramTrip);
             return;
         }
 
+        HashMap<Excursion, Integer> excursionMap = new HashMap<Excursion, Integer>();
         for(String paramName : request.getParameterMap().keySet()){
             if(paramName.startsWith("excursion-")){
                 // For each excursion parameter
@@ -46,24 +56,67 @@
                     response.sendRedirect("excursions.jsp?trip="+paramTrip);
                     return;
                 }
+                if(reservations > 0){
+                    price += excursion.getPrice() * ( reservations );
+                    excursionMap.put(excursion, reservations);
+                }
             }
         }
-        /*
-         * TODO:Systeem maakt boeking aan
-         * TODO:Systeem laat confirm pagina zien met overzicht en totaal prijs     
-         */
 %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:include page="template-header.jsp"/>
+<%
+        if(request.getParameter("confirm") == null){
+%>
+    <div class="span6 offset3">
+        <form action="confirm.jsp" method="POST">
+            <input type="hidden" name="confirm" value="1"/>
+            <h1><%= trip.getTripType().getName() %></h1>
+            <input type="hidden" name="trip" value="<%= trip.getID() %>"/>
+            <p>Aantal volwassenen: <%= amountAdults %></p>
+            <p>Aantal kinderen: <%= amountKids %></p>
+            <input type="hidden" name="amount-adults" value="<%= amountAdults %>"/>
+            <input type="hidden" name="amount-children" value="<%= amountKids %>"/>
+            <input type="hidden" name="cancellation-insurance" value="<%= request.getParameter("cancellation-insurance") %>"/>
+            <p><%= cancellationInsurance ? "inclusief" : "geen" %> annuleringsverzekering</p>
+            <%
+                if(excursionMap.isEmpty() == false){
+            %>
+            <h2>Excursies</h2>
+            <%
+                }
+                for(Excursion e : excursionMap.keySet()){
+            %>
+            <p><%= excursionMap.get(e) %>x <%= e.getName() %></p>
+            <input type="hidden" name="excursion-<%= e.getID() %>" value="<%= excursionMap.get(e) %>"/>
+            <%
+                }
+            %>
+            <p>Totale kosten: <%= formatter.format(price) %></p>
+            <input type="submit" class="btn btn-primary" value="Bevestigen"/>
+        </form>
+    </div>
+<%
+        }
+        else{
+            /*
+            * TODO:Systeem maakt boeking aan  
+            */
+%>
+    <h3>Boeking aangemaakt.</h3>
+<%
+        }
+%>
 <jsp:include page="template-footer.jsp"/>
 <%
     }
     // Numberformat exception
     catch(NumberFormatException e){
-         response.sendRedirect("excursions.jsp?trip="+request.getParameter("trip"));
+        session.setAttribute("alert", "AUB alleen getallen invullen - velden op 0 laten staan als er niemand mee gaat op een reis of excursie.");
+        response.sendRedirect("excursions.jsp?trip="+request.getParameter("trip"));
     }
     // NotFound exception, etc.
     catch(Exception e){
-         response.sendRedirect("booking.jsp");
+        response.sendRedirect("booking.jsp");
     }
 %>
