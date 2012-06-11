@@ -158,7 +158,11 @@
             em.persist(booking);
             em.getTransaction().commit();
 %>
-    <h3>Boeking aangemaakt.</h3>
+    <div class="span6 offset3">
+        <%-- TODO: Betalingssysteem; valt de scope van de demo --%>
+        <h2>Boeking aangemaakt.</h2>
+        <p>Uw bestelling is aangemaakt. Outdoor Paradise wenst u een goede reis!</p>
+    </div>
 <%
         }
 %>

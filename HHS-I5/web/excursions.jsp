@@ -25,7 +25,7 @@
 %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:include page="template-header.jsp"/>
-<div class="span4 offset2">
+<div class="span4 offset<%= products.size() > 0 ? 1 : 4 %>">
     <form action="confirm.jsp" method="POST">
         <h1><%= trip.getTripType().getName() %></h1>
         <div class="control-group">
@@ -51,30 +51,25 @@
                 </label>
             </div>
         </div>
-        <h2>Excursies</h2>
         <input type="hidden" name="trip" value="<%= id %>"/>
 <%
-    if(trip.getExcursionList() == null || trip.getExcursionList().size() == 0){
-%>
-        <p>Geen excursies bij deze trip.</p>
-<%
-    }
-    else{
+    if(trip.getExcursionList() == null || trip.getExcursionList().size() > 0){
         for(Excursion e : trip.getExcursionList()){
 %>
         <div class="control-group">
             <label class="control-label">
-                <h4><%= e.getExcursionType().getName() %></h4>
+                <h3>Excursie: <%= e.getExcursionType().getName() %></h3>
                 <p><%= e.getExcursionType().getDescription() %></p>
             </label>
             <div class="controls">
                 <label>Aantal Personen</label>
-                <input type="text" class="input" name="excursion-<%= e.getId() %>" value="0">
+                <input type="text" <%= e.getRemainingCount() == 0 ? "disabled" : "" %> class="input" name="excursion-<%= e.getId() %>" value="0">
                 <p class="help-block">
                     <em>( <%= formatter.format(e.getPrice()) %> per persoon. Nog ruimte beschikbaar voor <%= e.getRemainingCount() %> personen. Gids: <%= e.getGuide() %> )</em>
                 </p>
             </div>
         </div>
+        <hr/>
 <%
        }
     }

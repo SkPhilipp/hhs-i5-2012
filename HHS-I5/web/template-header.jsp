@@ -52,6 +52,9 @@
                         <h4 class="alert-heading">Helaas..</h4>
                         <%= session.getAttribute("alert") %>
                     </div>
+                    <div class="alert alert-info">
+                        <a href="booking.jsp">Bekijk ook onze alternatieve reizen! &raquo;</a>
+                    </div>
                 </div>
             </div>
             <div class="row">

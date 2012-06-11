@@ -20,7 +20,7 @@
     for(Trip trip : controller.findTripEntities()){
 %>
     <div class="span4" style="margin:5px;">
-        <div class="thumbnail" style="background:rgba(255,255,255,0.7)">
+        <div class="thumbnail" style="background:rgba(255,255,255,0.7);min-height:160px;">
             <div class="caption">
                 <h4><%= trip.getTripType().getName() %></h4>
                 <p><%= trip.getTripType().getDescription() %></p>
