@@ -31,6 +31,7 @@ public class Booking implements Serializable {
     public static final double CANCELLATION_INSURANCE_PRICE = 30.00;
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "ID")
     private Integer id;
     @Basic(optional = false)

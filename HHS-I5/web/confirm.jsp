@@ -122,6 +122,7 @@
             PrivateJpaController privateController = new PrivateJpaController(ut, emf);
             //TODO: Private id ; not implementing login system for demo.
             Private private1 = privateController.findPrivate(1);
+            // -- Create booking
             Booking booking = new Booking();
             booking.setAmountOfAdults((short)amountAdults);
             booking.setAmountOfKids((short)amountKids);
@@ -129,10 +130,30 @@
             booking.setSalePrice(price);
             booking.setTrip(trip);
             booking.setPrivate1(private1);
-            private1.setBookingList(new ArrayList<Booking>());
+            if(private1.getBookingList() == null){
+                private1.setBookingList(new ArrayList<Booking>());
+            }
             private1.getBookingList().add(booking);
+            if(trip.getBookingList() == null){
+                trip.setBookingList(new ArrayList<Booking>());
+            }
             trip.getBookingList().add(booking);
             EntityManager em = emf.createEntityManager();
+            em.getTransaction().begin();
+            em.persist(booking);
+            em.getTransaction().commit();
+            // -- Booking Excursion relationship
+            List<BookingExcursion> excursions = new ArrayList<BookingExcursion>();
+            for(Excursion e : excursionMap.keySet()){
+                if(excursionMap.get(e) > 0){
+                    BookingExcursion bk = new BookingExcursion(booking.getId(), e.getId());
+                    bk.setBooking1(booking);
+                    bk.setExcursion1(e);
+                    bk.setAmountOfPeople(excursionMap.get(e));
+                    excursions.add(bk);
+                }
+            }
+            booking.setBookingExcursionList(excursions);
             em.getTransaction().begin();
             em.persist(booking);
             em.getTransaction().commit();
@@ -148,11 +169,6 @@
     catch(NumberFormatException e){
         session.setAttribute("alert", "AUB alleen getallen invullen - velden op 0 laten staan als er niemand mee gaat op een reis of excursie.");
         response.sendRedirect("excursions.jsp?trip="+request.getParameter("trip"));
-    }
-    catch(ConstraintViolationException e){
-        for(ConstraintViolation cv : e.getConstraintViolations()){
-            System.out.println(cv.getConstraintDescriptor());
-        }
     }
     // NotFound exception, etc.
     catch(Exception e){

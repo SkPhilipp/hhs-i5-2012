@@ -20,6 +20,7 @@
         UserTransaction ut = (UserTransaction)new InitialContext().lookup("java:comp/UserTransaction");
         TripJpaController controller = new TripJpaController(ut, emf);
         Trip trip = controller.findTrip(id);
+        List<Product> products = trip.getTripType().getProductList();
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
 %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -78,20 +79,27 @@
        }
     }
 %>
-        <input type="submit" class="btn btn-primary" value="Bevestigen"/>
+        <input type="submit" class="btn btn-primary" value="Bevestigen &raquo;"/>
     </form>
 </div>
-<div class="span5">
-    <h2>Gerelateerde Producten</h2>
-    <%
-        List<Product> products = trip.getTripType().getProductList();
-        for(Product product : products){
-    %>
-        <p><%= product.getProductName() %></p>
-    <%
-        }
-    %>
-</div>
+<% if(products.size() > 0){ %>
+    <div class="span6">
+        <h2>Gerelateerde Producten</h2>
+        <ul class="thumbnails">
+        <% for(Product product : products){ %>
+            <li class="span3">
+                <div class="thumbnail">
+                    <img src="http://placehold.it/260x180" alt="">
+                    <div class="caption">
+                        <h5><%= product.getProductName() %></h5>
+                        <p><a href="#" class="btn btn-primary">Kopen</a></p>
+                    </div>
+                </div>
+            </li>
+        <% } %>
+        </ul>
+    </div>
+<% } %>
 <jsp:include page="template-footer.jsp"/>
 <%
     }
