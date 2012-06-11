@@ -1,6 +1,17 @@
 <%--
     @author Groep3 2012 : Anthony Elbers, Philipp Gayret, Bas Mans, Stefan Schouten
 --%>
+<%@page import="paradise.jpa.PrivateJpaController"%>
+<%@page import="javax.persistence.EntityManager"%>
+<%@page import="javax.validation.ConstraintViolationException"%>
+<%@page import="javax.validation.ConstraintViolation"%>
+<%@page import="paradise.model.Private"%>
+<%@page import="paradise.model.BookingExcursionPK"%>
+<%@page import="paradise.model.BookingExcursion"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="paradise.jpa.BookingExcursionJpaController"%>
+<%@page import="paradise.jpa.BookingJpaController"%>
 <%@page import="paradise.jpa.ExcursionJpaController"%>
 <%@page import="paradise.jpa.TripJpaController"%>
 <%@page import="paradise.model.Booking"%>
@@ -108,9 +119,23 @@
 <%
         }
         else{
-            /*
-            * TODO:Systeem maakt boeking aan  
-            */
+            PrivateJpaController privateController = new PrivateJpaController(ut, emf);
+            //TODO: Private id ; not implementing login system for demo.
+            Private private1 = privateController.findPrivate(1);
+            Booking booking = new Booking();
+            booking.setAmountOfAdults((short)amountAdults);
+            booking.setAmountOfKids((short)amountKids);
+            booking.setHasCancellationInsurance(cancellationInsurance);
+            booking.setSalePrice(price);
+            booking.setTrip(trip);
+            booking.setPrivate1(private1);
+            private1.setBookingList(new ArrayList<Booking>());
+            private1.getBookingList().add(booking);
+            trip.getBookingList().add(booking);
+            EntityManager em = emf.createEntityManager();
+            em.getTransaction().begin();
+            em.persist(booking);
+            em.getTransaction().commit();
 %>
     <h3>Boeking aangemaakt.</h3>
 <%
@@ -124,8 +149,14 @@
         session.setAttribute("alert", "AUB alleen getallen invullen - velden op 0 laten staan als er niemand mee gaat op een reis of excursie.");
         response.sendRedirect("excursions.jsp?trip="+request.getParameter("trip"));
     }
+    catch(ConstraintViolationException e){
+        for(ConstraintViolation cv : e.getConstraintViolations()){
+            System.out.println(cv.getConstraintDescriptor());
+        }
+    }
     // NotFound exception, etc.
     catch(Exception e){
+        e.printStackTrace();
         response.sendRedirect("booking.jsp");
     }
 %>

@@ -31,9 +31,6 @@ public class Booking implements Serializable {
     public static final double CANCELLATION_INSURANCE_PRICE = 30.00;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "ID")
     private Integer id;
     @Basic(optional = false)
@@ -51,7 +48,7 @@ public class Booking implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "salePrice")
-    private long salePrice;
+    private double salePrice;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "booking1", fetch = FetchType.LAZY)
     private List<BookingExcursion> bookingExcursionList;
     @JoinColumn(name = "trip", referencedColumnName = "ID")
@@ -68,7 +65,7 @@ public class Booking implements Serializable {
         this.id = id;
     }
 
-    public Booking(Integer id, short amountOfAdults, short amountOfKids, boolean hasCancellationInsurance, long salePrice) {
+    public Booking(Integer id, short amountOfAdults, short amountOfKids, boolean hasCancellationInsurance, double salePrice) {
         this.id = id;
         this.amountOfAdults = amountOfAdults;
         this.amountOfKids = amountOfKids;
@@ -108,11 +105,11 @@ public class Booking implements Serializable {
         this.hasCancellationInsurance = hasCancellationInsurance;
     }
 
-    public long getSalePrice() {
+    public double getSalePrice() {
         return salePrice;
     }
 
-    public void setSalePrice(long salePrice) {
+    public void setSalePrice(double salePrice) {
         this.salePrice = salePrice;
     }
 

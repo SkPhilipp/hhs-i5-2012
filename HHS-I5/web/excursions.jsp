@@ -1,6 +1,8 @@
 <%--
     @author Groep3 2012 : Anthony Elbers, Philipp Gayret, Bas Mans, Stefan Schouten
 --%>
+<%@page import="paradise.model.Product"%>
+<%@page import="java.util.List"%>
 <%@page import="paradise.jpa.TripJpaController"%>
 <%@page import="paradise.model.Booking"%>
 <%@page import="java.text.NumberFormat"%>
@@ -22,19 +24,19 @@
 %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:include page="template-header.jsp"/>
-<div class="span6 offset3">
+<div class="span4 offset2">
     <form action="confirm.jsp" method="POST">
         <h1><%= trip.getTripType().getName() %></h1>
         <div class="control-group">
             <div class="controls">
                 <label>Aantal Volwassenen</label>
-                <input type="text" class="input-xlarge" name="amount-adults" value="0">
+                <input type="text" class="input" name="amount-adults" value="0">
             </div>
         </div>
         <div class="control-group">
             <div class="controls">
                 <label>Aantal Kinderen</label>
-                <input <% if(trip.getTripType().getKidsAllowed() == false) { %> disabled <% } %>type="text" class="input-xlarge" name="amount-children" value="0">
+                <input <% if(trip.getTripType().getKidsAllowed() == false) { %> disabled <% } %>type="text" class="input" name="amount-children" value="0">
                 <p class="help-block">
                     <em>( <%= formatter.format(trip.getPrice()) %> per persoon. Maximaal <%= trip.getRemainingCount() %> )</em>
                 </p>
@@ -66,7 +68,7 @@
             </label>
             <div class="controls">
                 <label>Aantal Personen</label>
-                <input type="text" class="input-xlarge" name="excursion-<%= e.getId() %>" value="0">
+                <input type="text" class="input" name="excursion-<%= e.getId() %>" value="0">
                 <p class="help-block">
                     <em>( <%= formatter.format(e.getPrice()) %> per persoon. Nog ruimte beschikbaar voor <%= e.getRemainingCount() %> personen. Gids: <%= e.getGuide() %> )</em>
                 </p>
@@ -78,6 +80,17 @@
 %>
         <input type="submit" class="btn btn-primary" value="Bevestigen"/>
     </form>
+</div>
+<div class="span5">
+    <h2>Gerelateerde Producten</h2>
+    <%
+        List<Product> products = trip.getTripType().getProductList();
+        for(Product product : products){
+    %>
+        <p><%= product.getProductName() %></p>
+    <%
+        }
+    %>
 </div>
 <jsp:include page="template-footer.jsp"/>
 <%

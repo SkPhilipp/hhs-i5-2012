@@ -3,16 +3,26 @@
   <persistence-unit name="HHS-I5PU" transaction-type="JTA">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <jta-data-source>MySQL-OP</jta-data-source>
-    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <class>paradise.model.Booking</class>
+    <class>paradise.model.BookingExcursion</class>
+    <class>paradise.model.Employee</class>
+    <class>paradise.model.Excursion</class>
+    <class>paradise.model.ExcursionType</class>
+    <class>paradise.model.Private</class>
+    <class>paradise.model.Product</class>
+    <class>paradise.model.Trip</class>
+    <class>paradise.model.TripType</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <shared-cache-mode>NONE</shared-cache-mode>
-    <validation-mode>NONE</validation-mode>
     <properties>
       <property name="javax.persistence.target-database" value="MySQL"/>
       <property name="javax.persistence.logging.level" value="INFO"/>
-      <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/outdoorparadise"/>
-      <property name="javax.persistence.jdbc.user" value="outdoorparadise"/>
       <property name="javax.persistence.jdbc.password" value=""/>
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.user" value="outdoorparadise"/>
+      <property name="eclipselink.weaving.changetracking" value="false"/>
+      <property name="eclipselink.cache.shared.default" value="false"/>
     </properties>
   </persistence-unit>
 </persistence>
